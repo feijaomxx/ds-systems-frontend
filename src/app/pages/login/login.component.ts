@@ -7,16 +7,19 @@ import { Usuario } from '../../models/usuario.model';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule], 
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  
- 
-  isLoginMode = true;
 
-  
+
+  isLoginMode = true;
+  isDarkMode = true;
+
+
+
+
   usuario: Usuario = {
     nome: '',
     email: '',
@@ -27,25 +30,28 @@ export class LoginComponent {
     telefone: ''
   };
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(private usuarioService: UsuarioService) { }
 
 
   toggleMode() {
     this.isLoginMode = !this.isLoginMode;
   }
-
+  
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+  }
 
   onSubmit() {
     if (this.isLoginMode) {
       console.log('Tentando fazer login com:', this.usuario.email);
-  
+
     } else {
       console.log('Enviando para o Java...', this.usuario);
-      
+
       this.usuarioService.cadastrarUsuario(this.usuario).subscribe({
         next: (resposta) => {
           alert('Conta criada com sucesso! ID: ' + resposta.id);
-          this.toggleMode(); 
+          this.toggleMode();
         },
         error: (erro) => {
           alert('Erro ao criar conta: ' + erro.error.message);

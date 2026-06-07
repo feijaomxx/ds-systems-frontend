@@ -1,4 +1,16 @@
-<div class="login-container">
+<div class="login-container" [class.light-theme]="!isDarkMode">
+
+    <div class="theme-toggle-container">
+        <div class="theme-toggle-switch" (click)="toggleTheme()" [class.dark]="isDarkMode">
+            <div class="icon-wrapper">
+                <span class="theme-icon sun">☀️</span>
+            </div>
+            <div class="icon-wrapper">
+                <span class="theme-icon moon">🌙</span>
+            </div>
+            <div class="sliding-bubble" [class.slide-right]="isDarkMode"></div>
+        </div>
+    </div>
 
     <div class="left-panel">
         <img src="/LOGO_ZORA.png" alt="Zora Logo" class="logo-zora-topo">
@@ -10,65 +22,70 @@
                 <img src="/ilustracao-login.png" alt="Ilustração Financeira" class="hero-image">
             </div>
 
-            <p>Como um novo amanhecer, o Zora traz luz e clareza para a sua vida financeira. Deixe a obscuridade para trás e assuma o controle absoluto do seu futuro hoje mesmo.</p>
+            <p>Como um novo amanhecer, o Zora traz luz e clareza para a sua vida financeira. Deixe a obscuridade para
+                trás e assuma o controle absoluto do seu futuro hoje mesmo.</p>
         </div>
     </div>
 
     <div class="right-panel">
         <div class="login-card">
 
-            <div class="toggle-container">
-                <div class="toggle-switch" (click)="isLoginMode = !isLoginMode">
-                    <div class="slider" [class.cadastro-active]="!isLoginMode"></div>
-                    <span class="toggle-text" [class.active]="isLoginMode">ENTRAR</span>
-                    <span class="toggle-text" [class.active]="!isLoginMode">CADASTRAR</span>
-                </div>
+            <div class="tabs-nav">
+                <button type="button" (click)="isLoginMode = true" [class.active]="isLoginMode">ENTRAR</button>
+                <button type="button" (click)="isLoginMode = false" [class.active]="!isLoginMode">CADASTRAR</button>
+                <div class="neon-line" [class.slide-right]="!isLoginMode"></div>
             </div>
 
-            <form (ngSubmit)="onSubmit()" #authForm="ngForm">
+            <div class="form-window">
+                <div class="form-track" [class.show-register]="!isLoginMode">
 
-                <ng-container *ngIf="!isLoginMode">
-                    <div class="cadastro-fields">
-                        <div class="input-group">
-                            <input type="text" name="nome" [(ngModel)]="usuario.nome" required
-                                placeholder="Nome Completo">
-                        </div>
-
-                        <div class="input-row">
+                    <div class="form-section">
+                        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
                             <div class="input-group">
-                                <input type="text" name="cpf" [(ngModel)]="usuario.cpf" required placeholder="CPF">
+                                <input type="email" name="email_log" [(ngModel)]="usuario.email" required
+                                    placeholder="Seu email">
                             </div>
                             <div class="input-group">
-                                <input type="text" name="rg" [(ngModel)]="usuario.rg" required placeholder="RG">
+                                <input type="password" name="senha_log" [(ngModel)]="usuario.senha" required
+                                    placeholder="Senha">
                             </div>
-                        </div>
-
-                        <div class="input-row">
-                            <div class="input-group">
-                                <input type="text" name="telefone" [(ngModel)]="usuario.telefone" required
-                                    placeholder="Telefone">
-                            </div>
-                            <div class="input-group">
-                                <input type="number" name="renda" [(ngModel)]="usuario.rendaMensal" required
-                                    placeholder="Renda Mensal (R$)">
-                            </div>
-                        </div>
+                            <button type="submit" class="btn-primary" [disabled]="loginForm.invalid">ENTRAR</button>
+                        </form>
                     </div>
-                </ng-container>
 
-                <div class="input-group">
-                    <input type="email" name="email" [(ngModel)]="usuario.email" required placeholder="Seu email">
+                    <div class="form-section">
+                        <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+                            <div class="input-group">
+                                <input type="text" name="nome" [(ngModel)]="usuario.nome" required
+                                    placeholder="Nome Completo">
+                            </div>
+                            <div class="input-row">
+                                <div class="input-group"><input type="text" name="cpf" [(ngModel)]="usuario.cpf"
+                                        required placeholder="CPF"></div>
+                                <div class="input-group"><input type="text" name="rg" [(ngModel)]="usuario.rg" required
+                                        placeholder="RG"></div>
+                            </div>
+                            <div class="input-row">
+                                <div class="input-group"><input type="text" name="tel" [(ngModel)]="usuario.telefone"
+                                        required placeholder="Telefone"></div>
+                                <div class="input-group"><input type="number" name="renda"
+                                        [(ngModel)]="usuario.rendaMensal" required placeholder="Renda (R$)"></div>
+                            </div>
+                            <div class="input-group">
+                                <input type="email" name="email_reg" [(ngModel)]="usuario.email" required
+                                    placeholder="Email de cadastro">
+                            </div>
+                            <div class="input-group">
+                                <input type="password" name="senha_reg" [(ngModel)]="usuario.senha" required
+                                    placeholder="Crie uma senha">
+                            </div>
+                            <button type="submit" class="btn-primary"
+                                [disabled]="registerForm.invalid">CADASTRAR</button>
+                        </form>
+                    </div>
+
                 </div>
-
-                <div class="input-group">
-                    <input type="password" name="senha" [(ngModel)]="usuario.senha" required placeholder="Senha">
-                </div>
-
-                <button type="submit" class="btn-primary" [disabled]="authForm.invalid">
-                    {{ isLoginMode ? 'ENTRAR' : 'CADASTRAR' }}
-                </button>
-
-            </form>
+            </div>
         </div>
     </div>
 </div>
