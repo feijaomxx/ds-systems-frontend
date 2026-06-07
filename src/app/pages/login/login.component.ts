@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UsuarioService } from '../../services/usuario';
-import { Usuario } from '../../models/usuario.model';
+import { Router } from '@angular/router';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-login',
@@ -12,49 +12,44 @@ import { Usuario } from '../../models/usuario.model';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-
-
   isLoginMode = true;
   isDarkMode = true;
 
-
-
-
-  usuario: Usuario = {
+  usuario = {
     nome: '',
-    email: '',
-    senha: '',
-    rendaMensal: 0,
     cpf: '',
     rg: '',
-    telefone: ''
+    telefone: '',
+    rendaMensal: null,
+    email: '',
+    senha: '',
+    cep: '',
+    logradouro: '',
+    numero: '',
+    complemento: '',
+    bairro: '',
+    municipio: '',
+    estado: ''
   };
 
-  constructor(private usuarioService: UsuarioService) { }
+  constructor(private usuarioService: UsuarioService, private router: Router) { }
 
-
-  toggleMode() {
-    this.isLoginMode = !this.isLoginMode;
-  }
-  
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
   }
 
   onSubmit() {
     if (this.isLoginMode) {
-      console.log('Tentando fazer login com:', this.usuario.email);
-
+      console.log("Fazendo login...", this.usuario.email);
     } else {
-      console.log('Enviando para o Java...', this.usuario);
-
-      this.usuarioService.cadastrarUsuario(this.usuario).subscribe({
+      this.usuarioService.cadastrar(this.usuario).subscribe({
         next: (resposta) => {
-          alert('Conta criada com sucesso! ID: ' + resposta.id);
-          this.toggleMode();
+          alert('Conta criada com sucesso!');
+          this.router.navigate(['/dashboard'], { state: { nomeUsuario: this.usuario.nome } });
         },
         error: (erro) => {
-          alert('Erro ao criar conta: ' + erro.error.message);
+          console.error('Erro ao cadastrar:', erro);
+          alert('Erro ao criar conta. Verifique o console.');
         }
       });
     }
