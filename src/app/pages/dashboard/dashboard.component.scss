@@ -513,3 +513,99 @@
         }
     }
 }
+
+.fluxo-caixa {
+    .resumo-list {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .resumo-item {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        background-color: #1a1a1a;
+        border-radius: 8px;
+        overflow: hidden;
+        border-left: 4px solid transparent;
+        transition: transform 0.2s ease, background-color 0.3s ease;
+
+        &:hover {
+            transform: translateX(4px);
+        }
+
+        &.item-receita {
+            border-left-color: #14ae5c;
+
+            .barra-fundo {
+                background-color: #14ae5c;
+            }
+
+            .categoria-valor {
+                color: #14ae5c;
+            }
+        }
+
+        &.item-despesa {
+            border-left-color: #ff4d4d;
+
+            .barra-fundo {
+                background-color: #ff4d4d;
+            }
+
+            .categoria-valor {
+                color: #ff4d4d;
+            }
+        }
+
+        .barra-fundo {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            opacity: 0.15;
+            z-index: 0;
+            border-radius: 0 4px 4px 0;
+            transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .categoria-nome,
+        .categoria-valor {
+            position: relative;
+            z-index: 1;
+        }
+
+        .categoria-nome {
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .categoria-valor {
+            font-size: 1rem;
+        }
+    }
+}
+
+
+.light-theme {
+    .fluxo-caixa {
+        .resumo-item {
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+            .categoria-nome {
+                color: #1a1a1a;
+            }
+
+            .barra-fundo {
+                opacity: 0.12;
+            }
+        }
+    }
+}

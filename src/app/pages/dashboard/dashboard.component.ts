@@ -71,8 +71,7 @@ export class DashboardComponent implements OnInit {
       next: (dados) => {
         this.transacoes = dados;
         this.calcularSaldos();
-
-
+        this.calcularResumoCategorias();
         this.cdr.detectChanges();
         console.log("Dados carregados e interface forçada a atualizar.");
       },
@@ -96,7 +95,35 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  resumoCategorias: any[] = [];
 
+  calcularResumoCategorias() {
+    const resumoMap = new Map<string, { total: number, tipo: string }>();
+    let maxTotal = 0;
+
+    this.transacoes.forEach(t => {
+      const categoriaNome = t.categoria.nome;
+      const tipo = t.categoria.tipo;
+
+      const dadosAtuais = resumoMap.get(categoriaNome) || { total: 0, tipo: tipo };
+      const novoTotal = dadosAtuais.total + Number(t.valor);
+
+      resumoMap.set(categoriaNome, { total: novoTotal, tipo: tipo });
+
+      if (novoTotal > maxTotal) {
+        maxTotal = novoTotal;
+      }
+    });
+
+    this.resumoCategorias = Array.from(resumoMap, ([nome, dados]) => ({
+      nome,
+      total: dados.total,
+      tipo: dados.tipo,
+      percentual: maxTotal > 0 ? (dados.total / maxTotal) * 100 : 0
+    }));
+
+    this.resumoCategorias.sort((a, b) => b.total - a.total);
+  }
 
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
@@ -130,6 +157,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  
+
 
 }

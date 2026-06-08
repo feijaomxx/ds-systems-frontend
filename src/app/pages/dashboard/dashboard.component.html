@@ -46,9 +46,27 @@
 
         <section class="dashboard-details">
             <div class="card chart-placeholder">
-                <h3>Fluxo de Caixa</h3>
-                <div class="dummy-chart">
-                    <p>Gráfico em desenvolvimento...</p>
+                <div class="card fluxo-caixa">
+                    <h3>Fluxo por Categoria</h3>
+
+                    <div class="resumo-list">
+
+                        <div *ngIf="resumoCategorias.length === 0" class="empty-state">
+                            <p>Nenhum fluxo registado ainda.</p>
+                        </div>
+
+                        <div class="resumo-item" *ngFor="let item of resumoCategorias"
+                            [ngClass]="item.tipo === 'RECEITA' ? 'item-receita' : 'item-despesa'">
+
+                            <div class="barra-fundo" [style.width.%]="item.percentual"></div>
+
+                            <span class="categoria-nome">{{ item.nome }}</span>
+                            <strong class="categoria-valor">
+                                {{ item.tipo === 'RECEITA' ? '+' : '-' }} {{ item.total | currency:'BRL' }}
+                            </strong>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
