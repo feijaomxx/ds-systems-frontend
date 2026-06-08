@@ -1,42 +1,23 @@
-<div class="dashboard-layout" [class.light-theme]="!isDarkMode" [class.sidebar-collapsed]="isSidebarCollapsed">
+<div class="dashboard-container" [class.light-theme]="!isDarkMode">
 
     <aside class="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <img src="LOGO_ZORA.png" alt="Zora">
-                <span class="logo-text">ZORA</span>
-            </div>
-
-            <button class="btn-toggle-sidebar" (click)="toggleSidebar()">
-                <span class="toggle-icon">☰</span>
-            </button>
+        <div class="logo-area">
+            <img src="/LOGO_ZORA.png" alt="Zora Logo">
+            <span>ZORA</span>
         </div>
 
-        <ul class="menu">
-            <li>
-                <a routerLink="/dashboard" class="active">
-                    <i class="icon">📊</i>
-                    <span class="menu-text">Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a routerLink="/transacoes">
-                    <i class="icon">💸</i>
-                    <span class="menu-text">Transações</span>
-                </a>
-            </li>
-        </ul>
+        <nav class="menu">
+            <a href="#" class="active">Dashboard</a>
+            <a href="#">Transações</a>
+            <a href="#">Relatórios</a>
+            <a href="#">Configurações</a>
+        </nav>
 
-        <div class="bottom-actions">
+        <div class="sidebar-footer">
             <button class="btn-theme" (click)="toggleTheme()">
-                <i class="icon">{{ isDarkMode ? '☀️' : '🌙' }}</i>
-                <span class="menu-text">{{ isDarkMode ? 'Modo Claro' : 'Modo Escuro' }}</span>
+                {{ isDarkMode ? '☀️ Modo Claro' : '🌙 Modo Escuro' }}
             </button>
-
-            <button (click)="sair()" class="btn-logout">
-                <i class="icon">🚪</i>
-                <span class="menu-text">Sair</span>
-            </button>
+            <button class="btn-logout" (click)="sair()">SAIR</button>
         </div>
     </aside>
 
@@ -64,24 +45,27 @@
         </section>
 
         <section class="dashboard-details">
+            <div class="card chart-placeholder">
+                <div class="card fluxo-caixa">
+                    <h3>Fluxo por Categoria</h3>
 
-            <div class="card fluxo-caixa">
-                <h3>Fluxo por Categoria</h3>
+                    <div class="resumo-list">
 
-                <div class="resumo-list">
-                    <div *ngIf="resumoCategorias.length === 0" class="empty-state">
-                        <p>Nenhum fluxo registado ainda.</p>
-                    </div>
+                        <div *ngIf="resumoCategorias.length === 0" class="empty-state">
+                            <p>Nenhum fluxo registado ainda.</p>
+                        </div>
 
-                    <div class="resumo-item" *ngFor="let item of resumoCategorias"
-                        [ngClass]="item.tipo === 'RECEITA' ? 'item-receita' : 'item-despesa'">
+                        <div class="resumo-item" *ngFor="let item of resumoCategorias"
+                            [ngClass]="item.tipo === 'RECEITA' ? 'item-receita' : 'item-despesa'">
 
-                        <div class="barra-fundo" [style.width.%]="item.percentual"></div>
+                            <div class="barra-fundo" [style.width.%]="item.percentual"></div>
 
-                        <span class="categoria-nome">{{ item.nome }}</span>
-                        <strong class="categoria-valor">
-                            {{ item.tipo === 'RECEITA' ? '+' : '-' }} {{ item.total | currency:'BRL' }}
-                        </strong>
+                            <span class="categoria-nome">{{ item.nome }}</span>
+                            <strong class="categoria-valor">
+                                {{ item.tipo === 'RECEITA' ? '+' : '-' }} {{ item.total | currency:'BRL' }}
+                            </strong>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -110,12 +94,15 @@
                 </div>
 
                 <div class="transaction-list">
+
                     <div *ngIf="transacoes.length === 0" class="empty-state" style="padding: 20px; color: #888;">
                         <p>Nenhuma transação encontrada ainda.</p>
                     </div>
 
                     <div class="t-item" *ngFor="let t of transacoes">
-                        <span class="icon">{{ t.categoria.tipo === 'RECEITA' ? '💰' : '🛒' }}</span>
+                        <span class="icon">
+                            {{ t.categoria.tipo === 'RECEITA' ? '💰' : '🛒' }}
+                        </span>
                         <div class="info">
                             <strong>{{ t.categoria.nome }}</strong>
                             <small>{{ t.dataTransacao | date:'dd/MM/yyyy' }} - {{ t.descricao }}</small>
@@ -125,11 +112,11 @@
                             {{ t.categoria.tipo === 'RECEITA' ? '+' : '-' }} {{ t.valor | currency:'BRL' }}
                         </span>
                     </div>
+
                 </div>
             </div>
         </section>
     </main>
-
     <div class="modal-overlay" *ngIf="isTransactionModalOpen">
         <div class="modal-content">
             <div class="modal-header">
@@ -138,6 +125,7 @@
             </div>
 
             <form (ngSubmit)="salvarTransacao()" #transacaoForm="ngForm">
+
                 <div class="input-row">
                     <div class="input-group">
                         <label>Tipo de Movimentação</label>
