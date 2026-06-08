@@ -69,7 +69,7 @@ export class LoginComponent {
       this.usuarioService.cadastrar(this.usuario).subscribe({
         next: (resposta) => {
           alert('Conta criada com sucesso!');
-          this.router.navigate(['/dashboard'], {
+          this.router.navigate(['/'], {
             state: {
               nomeUsuario: this.usuario.nome,
               idUsuario: resposta.id
