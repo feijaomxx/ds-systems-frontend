@@ -3,13 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TransacaoService {
+  private apiUrl = 'http://ds-systems-backend-production.up.railway.app:8080/api/transacoes';
 
-  private apiUrl = 'http://localhost:8080/api/transacoes';
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   lancar(transacao: any): Observable<any> {
     return this.http.post(this.apiUrl, transacao);

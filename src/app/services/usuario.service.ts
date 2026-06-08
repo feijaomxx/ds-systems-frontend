@@ -3,13 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsuarioService {
+  private apiUrl = 'ds-systems-backend-production.up.railway.app:8080/api/usuarios';
 
-  private apiUrl = 'http://localhost:8080/api/usuarios';
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   cadastrar(usuario: any): Observable<any> {
     return this.http.post(this.apiUrl, usuario);
