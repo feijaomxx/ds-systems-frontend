@@ -1,10 +1,52 @@
 .login-container {
     display: flex;
+    flex-direction: column;
+    /* Agora as coisas fluem do topo (Header) para baixo */
     min-height: 100vh;
     background-color: #0d0d0d;
     font-family: 'Quicksand', sans-serif;
+    overflow-x: hidden;
 }
 
+/* =======================================
+   HEADER FIXO (Logo + Modo Escuro/Claro)
+   ======================================= */
+.zora-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 50px;
+    background-color: rgba(13, 13, 13, 0.95);
+    backdrop-filter: blur(10px);
+    /* Deixa o fundo embaçado ao rolar por baixo */
+    border-bottom: 1px solid #1a1a1a;
+    z-index: 1000;
+    box-sizing: border-box;
+    transition: background-color 0.4s ease, border-color 0.4s ease;
+
+    .nav-logo {
+        height: 40px;
+        filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.4));
+    }
+}
+
+/* Envolve o conteudo para ser empurrado para baixo do Header */
+.main-content-wrapper {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    margin-top: 80px;
+    /* Mesma altura do zora-navbar */
+}
+
+/* =======================================
+   PAINEL ESQUERDO (Ilustração)
+   ======================================= */
 .left-panel {
     flex: 1;
     display: flex;
@@ -13,20 +55,6 @@
     align-items: center;
     padding: 50px;
     background: radial-gradient(circle at 50% 50%, #0a2e1c 0%, #0d0d0d 70%);
-    position: relative;
-
-    input,
-    button {
-        font-family: 'Quicksand', sans-serif;
-    }
-
-    .logo-zora-topo {
-        position: absolute;
-        top: 40px;
-        left: 50px;
-        width: 60px;
-        filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.4));
-    }
 
     .hero-content {
         max-width: 550px;
@@ -55,35 +83,119 @@
     }
 }
 
-@keyframes float {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-15px);
-    }
-}
-
-
+/* =======================================
+   PAINEL DIREITO (Formulário)
+   ======================================= */
 .right-panel {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #0d0d0d;
-    overflow: hidden;
 }
 
 .login-card {
     width: 100%;
     max-width: 460px;
     padding: 20px;
-    margin-top: 162px;
 }
 
+/* Titulo que só aparece no celular */
+.login-header-mobile {
+    display: none;
+    text-align: center;
+    margin-bottom: 30px;
+
+    h2 {
+        color: #fff;
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+
+    p {
+        color: #888;
+        font-size: 14px;
+    }
+}
+
+/* Botão de Tema (Agora sem position absolute) */
+.theme-toggle-container {
+    position: relative;
+    z-index: 10;
+}
+
+.theme-toggle-switch {
+    position: relative;
+    display: flex;
+    width: 72px;
+    height: 38px;
+    background-color: #f0f0f0;
+    border-radius: 38px;
+    padding: 4px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.4s ease, box-shadow 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 38px;
+        border: 1px solid #e0e0e0;
+        transition: border-color 0.4s ease;
+    }
+
+    &.dark {
+        background-color: #1a1a1a;
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+
+        &::before {
+            border-color: #333333;
+        }
+    }
+
+    .icon-wrapper {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
+        font-size: 16px;
+        opacity: 0.6;
+        transition: opacity 0.3s ease;
+    }
+
+    .sliding-bubble {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 30px;
+        height: 30px;
+        background-color: #12894b;
+        border-radius: 50%;
+        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        &.slide-right {
+            transform: translateX(34px);
+            background-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+        }
+    }
+
+    &.dark .icon-wrapper:nth-child(2),
+    &:not(.dark) .icon-wrapper:nth-child(1) {
+        opacity: 1;
+    }
+}
+
+/* =======================================
+   FORMULÁRIOS & BOTÕES (Mantido o seu código)
+   ======================================= */
 .tabs-nav {
     display: flex;
     position: relative;
@@ -160,6 +272,7 @@
         border-bottom: 1px solid #333;
         color: #fff;
         font-size: 16px;
+        font-family: 'Quicksand', sans-serif;
 
         &:focus {
             outline: none;
@@ -183,6 +296,7 @@
     cursor: pointer;
     margin-top: 10px;
     transition: all 0.3s;
+    font-family: 'Quicksand', sans-serif;
 
     &:hover:not(:disabled) {
         background: #00cc6a;
@@ -196,107 +310,40 @@
     }
 }
 
-
-.theme-toggle-container {
-    position: absolute;
-    top: 40px;
-    right: 50px;
-    z-index: 10;
-}
-
-.theme-toggle-switch {
-    position: relative;
-    display: flex;
-    width: 72px;
-    height: 38px;
-    background-color: #f0f0f0;
-    border-radius: 38px;
-    padding: 4px;
-    box-sizing: border-box;
-    cursor: pointer;
-    transition: background-color 0.4s ease, box-shadow 0.3s ease;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 38px;
-        border: 1px solid #e0e0e0;
-        transition: border-color 0.4s ease;
-    }
-
-    &.dark {
-        background-color: #1a1a1a;
-        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
-
-        &::before {
-            border-color: #333333;
-        }
-    }
-
-    .icon-wrapper {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 2;
-        font-size: 16px;
-        opacity: 0.6;
-        transition: opacity 0.3s ease;
-    }
-
-    .sliding-bubble {
-        position: absolute;
-        top: 4px;
-        left: 4px;
-        width: 30px;
-        height: 30px;
-        background-color: #12894b;
-        border-radius: 50%;
-        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-        &.slide-right {
-            transform: translateX(34px);
-            background-color: #00ff88;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
-        }
-    }
-
-    &.dark .icon-wrapper:nth-child(2),
-    &:not(.dark) .icon-wrapper:nth-child(1) {
-        opacity: 1;
-    }
-}
-
-
+/* =======================================
+   TEMA CLARO (LIGHT THEME)
+   ======================================= */
 .login-container.light-theme {
     background-color: #f5f7fa;
 
+    .zora-navbar {
+        background-color: rgba(245, 247, 250, 0.95);
+        border-bottom-color: #e0e0e0;
+    }
 
     .left-panel {
         background: radial-gradient(circle at 50% 50%, #e1f2e8 0%, #f5f7fa 70%);
+    }
 
-        .hero-content {
-            h1 {
-                color: #1a1a1a;
-            }
+    .hero-content h1 {
+        color: #1a1a1a;
+    }
 
-            p {
-                color: #555555;
-            }
-        }
+    .hero-content p {
+        color: #555555;
     }
 
     .right-panel {
         background-color: #f5f7fa;
     }
 
+    .login-header-mobile h2 {
+        color: #1a1a1a;
+    }
 
+    .login-header-mobile p {
+        color: #555;
+    }
 
     .tabs-nav {
         border-bottom-color: #dddddd;
@@ -315,18 +362,16 @@
         }
     }
 
-    .input-group {
-        input {
-            border-bottom-color: #cccccc;
-            color: #1a1a1a;
+    .input-group input {
+        border-bottom-color: #cccccc;
+        color: #1a1a1a;
 
-            &:focus {
-                border-bottom-color: #12894b;
-            }
+        &:focus {
+            border-bottom-color: #12894b;
+        }
 
-            &::placeholder {
-                color: #999999;
-            }
+        &::placeholder {
+            color: #999999;
         }
     }
 
@@ -346,49 +391,47 @@
     }
 }
 
-
-.login-container {
-    display: flex;
-    min-height: 100vh;
-    width: 100vw;
-    background-color: #080808;
-}
-
-.illustration-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.form-section {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-
+/* =======================================
+   RESPONSIVIDADE: CELULARES (ex: iPhone)
+   ======================================= */
 @media screen and (max-width: 768px) {
-    .login-container {
+    .main-content-wrapper {
         flex-direction: column;
     }
 
-    .illustration-section {
+    /* Esconde 100% o painel esquerdo da Imagem */
+    .left-panel {
         display: none !important;
     }
 
-    .form-section {
-        width: 100%;
-        flex: none;
-        min-height: 100vh;
+    /* Ajuste da barra do topo para caber bem no celular */
+    .zora-navbar {
+        padding: 0 20px;
     }
 
-    .login-box {
+    /* O painel direito ocupa toda a tela */
+    .right-panel {
         width: 100%;
-        max-width: 400px;
-        padding: 30px 20px;
+        align-items: flex-start;
+        /* Joga os formulários para cima */
+        padding: 20px;
+    }
+
+    .login-card {
+        margin-top: 20px;
+        /* Um pequeno respiro do Header fixo */
+        padding: 0;
+        /* Remove bordas desnecessárias no celular */
+    }
+
+    /* Ativa o título responsivo no lugar da imagem */
+    .login-header-mobile {
+        display: block;
+    }
+
+    /* Quando for celular pequeno, empilha os campos (ex: RG e CPF um debaixo do outro) */
+    .input-row {
+        flex-direction: column;
+        gap: 0;
     }
 }
