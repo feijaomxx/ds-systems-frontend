@@ -17,7 +17,7 @@
             <button class="btn-theme" (click)="toggleTheme()">
                 {{ isDarkMode ? '☀️ Modo Claro' : '🌙 Modo Escuro' }}
             </button>
-            <button class="btn-logout" (click)="logout()">SAIR</button>
+            <button class="btn-logout" (click)="sair()">SAIR</button>
         </div>
     </aside>
 
@@ -30,18 +30,17 @@
         <section class="stats-grid">
             <div class="card balance">
                 <label>Saldo Total</label>
-                <h2>R$ 12.450,00</h2>
-                <span class="trend up">▲ 12% este mês</span>
+                <h2>{{ saldoTotal | currency:'BRL' }}</h2>
             </div>
 
             <div class="card income">
                 <label>Receitas</label>
-                <h2>R$ 8.200,00</h2>
+                <h2>{{ totalReceitas | currency:'BRL' }}</h2>
             </div>
 
             <div class="card expenses">
                 <label>Despesas</label>
-                <h2>R$ 3.750,00</h2>
+                <h2>{{ totalDespesas | currency:'BRL' }}</h2>
             </div>
         </section>
 
@@ -77,14 +76,25 @@
                 </div>
 
                 <div class="transaction-list">
-                    <div class="t-item">
-                        <span class="icon">🛒</span>
-                        <div class="info">
-                            <strong>Supermercado</strong>
-                            <small>Hoje, 14:30</small>
-                        </div>
-                        <span class="value negative">- R$ 342,00</span>
+
+                    <div *ngIf="transacoes.length === 0" class="empty-state" style="padding: 20px; color: #888;">
+                        <p>Nenhuma transação encontrada ainda.</p>
                     </div>
+
+                    <div class="t-item" *ngFor="let t of transacoes">
+                        <span class="icon">
+                            {{ t.categoria.tipo === 'RECEITA' ? '💰' : '🛒' }}
+                        </span>
+                        <div class="info">
+                            <strong>{{ t.categoria.nome }}</strong>
+                            <small>{{ t.dataTransacao | date:'dd/MM/yyyy' }} - {{ t.descricao }}</small>
+                        </div>
+                        <span class="value"
+                            [ngClass]="{'positive': t.categoria.tipo === 'RECEITA', 'negative': t.categoria.tipo === 'DESPESA'}">
+                            {{ t.categoria.tipo === 'RECEITA' ? '+' : '-' }} {{ t.valor | currency:'BRL' }}
+                        </span>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -101,17 +111,18 @@
                 <div class="input-row">
                     <div class="input-group">
                         <label>Tipo de Movimentação</label>
-                        <select name="tipo" required>
+                        <select name="tipo">
                             <option value="1">Receita</option>
                             <option value="2">Despesa</option>
                         </select>
                     </div>
                     <div class="input-group">
                         <label>Categoria</label>
-                        <select name="categoria" required>
-                            <option value="1">Alimentação</option>
-                            <option value="2">Moradia</option>
-                            <option value="3">Salário</option>
+                        <select name="categoria" [(ngModel)]="novaTransacao.categoria.id" required>
+                            <option [ngValue]="1">Salário (Receita)</option>
+                            <option [ngValue]="2">Alimentação (Despesa)</option>
+                            <option [ngValue]="3">Lazer (Despesa)</option>
+                            <option [ngValue]="4">Moradia (Despesa)</option>
                         </select>
                     </div>
                 </div>
@@ -119,17 +130,18 @@
                 <div class="input-row">
                     <div class="input-group">
                         <label>Valor (R$)</label>
-                        <input type="number" name="valor" min="0.01" step="0.01" required placeholder="0,00">
+                        <input type="number" name="valor" [(ngModel)]="novaTransacao.valor" min="0.01" step="0.01"
+                            required placeholder="0.00">
                     </div>
                     <div class="input-group">
                         <label>Data</label>
-                        <input type="date" name="data" [max]="hoje" required>
+                        <input type="date" name="data" [(ngModel)]="novaTransacao.dataTransacao" [max]="hoje" required>
                     </div>
                 </div>
 
                 <div class="input-group">
                     <label>Descrição</label>
-                    <input type="text" name="descricao" maxlength="255" required
+                    <input type="text" name="descricao" [(ngModel)]="novaTransacao.descricao" maxlength="255" required
                         placeholder="Ex: Compra do mês no Atacadão">
                 </div>
 

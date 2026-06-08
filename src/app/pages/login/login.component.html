@@ -61,15 +61,14 @@
                             </div>
                             <div class="input-row">
                                 <div class="input-group"><input type="text" name="cpf" [(ngModel)]="usuario.cpf"
-                                        required placeholder="CPF"></div>
+                                         placeholder="CPF"  mask="000.000.000-00"></div>
                                 <div class="input-group"><input type="text" name="rg" [(ngModel)]="usuario.rg" required
                                         placeholder="RG"></div>
                             </div>
                             <div class="input-row">
                                 <div class="input-group"><input type="text" name="tel" [(ngModel)]="usuario.telefone"
-                                        required placeholder="Telefone"></div>
-                                <div class="input-group"><input type="number" name="renda"
-                                        [(ngModel)]="usuario.rendaMensal" required placeholder="Renda (R$)"></div>
+                                 placeholder="Telefone" mask="(00) 00000-0000"></div>
+                                <div class="input-group"><input type="text" name="renda" [(ngModel)]="usuario.rendaMensal" placeholder="Renda Mensal" mask="separator.2" thousandSeparator="." decimalMarker="," prefix="R$ "></div>
                             </div>
                             <div class="input-group">
                                 <input type="email" name="email_reg" [(ngModel)]="usuario.email" required
@@ -78,6 +77,42 @@
                             <div class="input-group">
                                 <input type="password" name="senha_reg" [(ngModel)]="usuario.senha" required
                                     placeholder="Crie uma senha">
+                            </div>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <input type="text" name="cep" [(ngModel)]="usuario.endereco.cep" placeholder="CEP" mask="00000-000"
+                                        (blur)="buscarEndereco()">
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" name="logradouro" [(ngModel)]="usuario.endereco.logradouro" required
+                                        placeholder="Rua/Avenida">
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <input type="text" name="numero" [(ngModel)]="usuario.endereco.numero" required
+                                        placeholder="Número">
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" name="complemento" [(ngModel)]="usuario.endereco.complemento"
+                                        placeholder="Complemento (Opcional)">
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <input type="text" name="bairro" [(ngModel)]="usuario.endereco.bairro" required
+                                        placeholder="Bairro">
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" name="municipio" [(ngModel)]="usuario.endereco.municipio" required
+                                        placeholder="Cidade">
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" name="estado" [(ngModel)]="usuario.endereco.estado" required
+                                        placeholder="UF" maxlength="2">
+                                </div>
                             </div>
                             <button type="submit" class="btn-primary"
                                 [disabled]="registerForm.invalid">CADASTRAR</button>

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TransacaoService } from '../../services/transacao.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,22 +11,100 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   isDarkMode = true;
-  userName = "Davi Emanuel";
+  userName = "Visitante";
+  userId: number | null = null;
+
+  saldoTotal = 0.00;
+  totalReceitas = 0.00;
+  totalDespesas = 0.00;
+  transacoes: any[] = [];
 
   isTransactionModalOpen = false;
 
   hoje = new Date().toISOString().split('T')[0];
 
-  constructor(private router: Router) { }
+  novaTransacao = {
+    usuario: { id: 0 },
+    categoria: { id: null },
+    valor: null,
+    dataTransacao: this.hoje,
+    descricao: ''
+  };
+
+  constructor(private router: Router, private transacaoService: TransacaoService, private cdr: ChangeDetectorRef) {
+    const storedName = localStorage.getItem('userName');
+    const storedId = localStorage.getItem('userId');
+
+
+
+
+    if (storedName) {
+      this.userName = storedName;
+    }
+
+    if (storedId) {
+      this.userId = Number(storedId);
+      this.novaTransacao.usuario.id = this.userId;
+    }
+  }
+
+  ngOnInit(): void {
+    const storedId = localStorage.getItem('userId');
+
+    if (storedId) {
+      this.userId = parseInt(storedId);
+      console.log("Gatilho ativado: Carregando dados para o ID", this.userId);
+
+      this.carregarTransacoes();
+    } else {
+      console.warn("Nenhum usuário logado. Redirecionando...");
+      this.router.navigate(['/login']);
+    }
+  }
+
+  carregarTransacoes() {
+    if (!this.userId) return;
+
+    this.transacaoService.buscarPorUsuario(this.userId).subscribe({
+      next: (dados) => {
+        this.transacoes = dados;
+        this.calcularSaldos();
+
+
+        this.cdr.detectChanges();
+        console.log("Dados carregados e interface forçada a atualizar.");
+      },
+      error: (erro) => console.error("Erro ao carregar:", erro)
+    });
+  }
+
+  calcularSaldos() {
+    this.saldoTotal = 0;
+    this.totalReceitas = 0;
+    this.totalDespesas = 0;
+
+    for (let t of this.transacoes) {
+      if (t.categoria.tipo === 'RECEITA') {
+        this.totalReceitas += t.valor;
+        this.saldoTotal += t.valor;
+      } else {
+        this.totalDespesas += t.valor;
+        this.saldoTotal -= t.valor;
+      }
+    }
+  }
+
+
 
   toggleTheme() {
     this.isDarkMode = !this.isDarkMode;
   }
 
-  logout() {
+  sair() {
     this.router.navigate(['/']);
+    localStorage.clear();
   }
 
   openTransactionModal() {
@@ -37,7 +116,20 @@ export class DashboardComponent {
   }
 
   salvarTransacao() {
-    console.log("Transação salva! (Integração com Java em breve)");
-    this.closeTransactionModal();
+    if (!this.userId) return;
+
+    this.transacaoService.lancar(this.novaTransacao).subscribe({
+      next: (resposta) => {
+        this.closeTransactionModal();
+        this.novaTransacao.valor = null;
+        this.novaTransacao.descricao = '';
+
+        this.carregarTransacoes();
+      },
+      error: (erro) => alert('Erro ao registrar a transação.')
+    });
   }
+
+  
+
 }
