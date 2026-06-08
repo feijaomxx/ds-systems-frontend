@@ -15,7 +15,7 @@ export class DashboardComponent implements OnInit {
   isDarkMode = true;
   userName = "Visitante";
   userId: number | null = null;
-
+  isSidebarCollapsed: boolean = false;
   saldoTotal = 0.00;
   totalReceitas = 0.00;
   totalDespesas = 0.00;
@@ -62,6 +62,11 @@ export class DashboardComponent implements OnInit {
       console.warn("Nenhum usuário logado. Redirecionando...");
       this.router.navigate(['/login']);
     }
+  }
+
+  toggleSidebar(): void {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    this.cdr.detectChanges();
   }
 
   carregarTransacoes() {

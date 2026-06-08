@@ -1,23 +1,38 @@
 <div class="dashboard-container" [class.light-theme]="!isDarkMode">
 
     <aside class="sidebar">
-        <div class="logo-area">
-            <img src="/LOGO_ZORA.png" alt="Zora Logo">
-            <span>ZORA</span>
+        <div class="sidebar-header"
+            style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 2rem;">
+            <div class="logo" *ngIf="!isSidebarCollapsed">
+                <img src="LOGO_ZORA.png" alt="Zora" style="height: 32px;">
+            </div>
+
+            <button class="btn-toggle-sidebar" (click)="toggleSidebar()"
+                style="background: none; border: none; color: #888; cursor: pointer; font-size: 1.2rem;">
+                {{ isSidebarCollapsed ? '➔' : '➔' }}
+            </button>
         </div>
 
-        <nav class="menu">
-            <a href="#" class="active">Dashboard</a>
-            <a href="#">Transações</a>
-            <a href="#">Relatórios</a>
-            <a href="#">Configurações</a>
-        </nav>
+        <ul class="menu">
+            <li>
+                <a routerLink="/dashboard" class="active">
+                    <i class="icon">📊</i>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/transacoes">
+                    <i class="icon">💸</i>
+                    <span class="menu-text">Transações</span>
+                </a>
+            </li>
+        </ul>
 
-        <div class="sidebar-footer">
-            <button class="btn-theme" (click)="toggleTheme()">
-                {{ isDarkMode ? '☀️ Modo Claro' : '🌙 Modo Escuro' }}
+        <div class="bottom-actions">
+            <button (click)="sair()" class="btn-sair">
+                <i class="icon">🚪</i>
+                <span class="menu-text">Sair</span>
             </button>
-            <button class="btn-logout" (click)="sair()">SAIR</button>
         </div>
     </aside>
 

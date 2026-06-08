@@ -690,3 +690,63 @@
         }
     }
 }
+
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #000000;
+    border-right: 1px solid #1a1a1a;
+    padding: 24px;
+    transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), padding 0.3s ease;
+    z-index: 10;
+}
+
+.main-content {
+    flex: 1;
+    padding: 40px;
+    background-color: #080808;
+    overflow-y: auto;
+    transition: padding 0.3s ease;
+}
+
+.sidebar-collapsed {
+    .sidebar {
+        width: 80px;
+        padding: 24px 12px;
+        align-items: center;
+
+        .menu-text,
+        .logo {
+            display: none !important;
+        }
+
+        .menu li a {
+            justify-content: center;
+            padding: 12px 0;
+
+            .icon {
+                margin-right: 0;
+                font-size: 1.3rem;
+            }
+        }
+
+        .btn-toggle-sidebar {
+            transform: rotate(180deg);
+        }
+    }
+}
+
+.btn-toggle-sidebar:hover {
+    color: #14ae5c !important;
+}
